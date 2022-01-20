@@ -91,9 +91,11 @@ for (var i = 0; i< enemyInfo.length; i++) {
             var storeConfirm = window.confirm("The fight is over, visit the store before the next round?");
 
             // if yes, take them to the store() function
-            shop();
+            if (storeConfirm) {
+                shop();
         }
     }
+}
     // if player isn't alive, stop the game
     else {
         window.alert('You have lost your robot in battle! Game Over!');
@@ -106,11 +108,11 @@ for (var i = 0; i< enemyInfo.length; i++) {
 
  // function to end the entire game
  var endGame = function() {
+     window.alert("The game has now ended. Let's see how you did!");
      // if player is still alive, player wins!
      if (playerInfo.health > 0) {
          window.alert("Great job, you'vew survived the game! You now have a score of " + playerInfo.money + ".");
-     }
-     else {
+     } else {
      window.alert("The game has now ended. Let's see how you did!");
      }
 
@@ -120,8 +122,7 @@ for (var i = 0; i< enemyInfo.length; i++) {
      if(playAgainConfirm) {
          // restart the game
          startGame();
-     }
-     else {
+     } else {
          window.alert("Thank you for playing Robot Gladiators! Come back soon!");
      }
  };
@@ -204,6 +205,9 @@ var enemyInfo = [
     }
 ];
 
+console.log(enemyInfo);
+console.log(enemyInfo[0]);
+console.log(enemyInfo[0].name);
+console.log(enemyInfo[0]["attack"]);
  // start the game when the page loads
  startGame();
- endGame();
