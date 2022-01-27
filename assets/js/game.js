@@ -1,3 +1,5 @@
+// Game Functions
+
 // function to generate a random numberic value
 var randomNumber = function(min, max) {
     var value = Math.floor(Math.random() * (max-min + 1) + min);
@@ -9,13 +11,14 @@ var fightOrSkip = function() {
      // ask player if they'd like to fight or run
      var promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
 
-     promptFight = promptFight.toLowerCase();
-
-     // Conditional Recursive Function Call
+     // validate prompt answer
      if (promptFight === "" || promptFight === null) {
          window.alert("You need to provide a valid answer! Please try again.");
          return fightOrSkip();
      }
+
+     // convert promptFight to all lowercase so we can check with fewer options
+     promptFight = promptFight.toLowerCase();
 
      // if player picks "skip" confirm and then stop the loop
      if (promptFight === "skip") {
@@ -33,8 +36,8 @@ var fightOrSkip = function() {
         }
     }
     return false;
-}
-// fight function (now with parameter for enemy's name)
+};
+// fight function (now with parameter for enemy's object holding name, health, and attack values)
 var fight = function (enemy) {
     // keep track of who goes first
     var isPlayerTurn = true;
@@ -76,7 +79,7 @@ var fight = function (enemy) {
     var damage = randomNumber(enemy.attack - 3, enemy.attack);
 
     // remove player's health by subtracting the amount we set in the damage variable
-     playerInfo.health = Math.max(0, playerInfo.health - damage);
+    playerInfo.health = Math.max(0, playerInfo.health - damage);
     console.log(
         enemy.name + " attacked " + playerInfo.name + ". " + playerInfo.name + " now has " + playerInfo.health + " health remaining."
     );
@@ -111,13 +114,10 @@ for (var i = 0; i< enemyInfo.length; i++) {
         // reset enemy.health before starting new fight
         pickedEnemyObj.health = randomNumber(40, 60);
 
-        // pass the pickedenemy.name variable's value into the fight function, where it will assume the value of the enemy.name paramenter
+        console.log(pickedEnemyObj);
+
+        // pass the pickedEnemyObj object variable's value into the fight function, where it will assume the value of the enemy paramenter
         fight(pickedEnemyObj);
-        // keep track of who goes first
-        var isPlayerTurn = true;
-        if (Math.random() > 0.5) {
-            isPlayerTurn = false;
-        }
 
         // if player is still alive and we're not at the last enemy in the array
         if (playerInfo.health > 0 && i < enemyInfo.length - 1) {
@@ -143,11 +143,21 @@ for (var i = 0; i< enemyInfo.length; i++) {
  // function to end the entire game
  var endGame = function() {
      window.alert("The game has now ended. Let's see how you did!");
-     // if player is still alive, player wins!
-     if (playerInfo.health > 0) {
-         window.alert("Great job, you'vew survived the game! You now have a score of " + playerInfo.money + ".");
-     } else {
-     window.alert("The game has now ended. Let's see how you did!");
+
+     // check localStorage for high score, if it's not there, use 0
+     var highScore = localStorage.getItem("highscore");
+     if (highScore === null) {
+         highScore = 0;
+     }
+     // if player has more money than the high score, player has new high score!
+     if (playerInfo.money > highScore) {
+         localStorage.setItem("highscore", playerInfo.money);
+         localStorage.setItem("name", playerInfo.name);
+
+         alert(playerInfo.name + " now has the high score of " + playerInfo.money + "!");
+     }
+     else {
+         alert(playerInfo.name + " did not beat the high score of " + highScore + ". Maybe next time!");
      }
 
      // ask player if they'd like to play again
@@ -168,6 +178,8 @@ for (var i = 0; i< enemyInfo.length; i++) {
          "Would you like to REFILL your health, UPGRADE your attack, or LEAVE the store? Please enter 1 for REFILL, 2 for UPGRADE, or 3 for LEAVE."
      );
 
+     // convert answer from prompt to an actual number
+     shopOptionPrompt = parseInt(shopOptionPrompt);
      // use switch to carry out action
      switch (shopOptionPrompt) {
          case 1:
@@ -198,6 +210,10 @@ for (var i = 0; i< enemyInfo.length; i++) {
      console.log("Your robot's name is " + name);
      return name;
  };
+
+ // End Game Funtions
+
+ //Variables
  var playerInfo = {
     name: getPlayerName(),
     health: 100,
@@ -245,10 +261,5 @@ var enemyInfo = [
     }
 ];
 
-console.log(enemyInfo);
-console.log(enemyInfo[0]);
-console.log(enemyInfo[0].name);
-console.log(enemyInfo[0]["attack"]);
- // start the game when the page loads
 
  startGame();
